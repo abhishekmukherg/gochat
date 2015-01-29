@@ -15,7 +15,7 @@ func NewManager(db *gchatdb.DbConnection) *UserManager {
 	return &mgr
 }
 
-func (u *UserManager) GetById(id uint64) (*User, error) {
+func (u *UserManager) GetById(id int64) (*User, error) {
 	db := u.db
 	sqlStmt := "SELECT name FROM users WHERE id = ?"
 	var name string
@@ -30,4 +30,18 @@ func (u *UserManager) GetById(id uint64) (*User, error) {
 	default:
 		return &User{id: id, name: name}, nil
 	}
+}
+
+func (u *UserManager) Create(name string) (*User, error) {
+	db := u.db
+	sqlStmt := "INSERT INTO users(name) VALUES (?)"
+	result, err := db.Exec(sqlStmt, name)
+	if err != nil {
+		return nil, err
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+	return &User{id: id, name: name}, nil
 }

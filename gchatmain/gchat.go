@@ -21,6 +21,11 @@ func Main() {
 	}
 
 	userMgr := users.NewManager(db)
-	user, err := userMgr.GetById(0)
+	user, err := userMgr.Create("magic")
+	if err != nil {
+		log.Fatalln("Failed to do magic")
+	}
+	fmt.Printf("Magic %v %q\n", user, err)
+	user, err = userMgr.GetById(user.GetId())
 	fmt.Printf("Magic %v %q\n", user, err)
 }

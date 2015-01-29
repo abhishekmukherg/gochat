@@ -5,15 +5,15 @@ import (
 )
 
 type User struct {
-	id uint64
+	id int64
 	name string
 }
 
-func (u *User) getId() uint64 {
+func (u *User) GetId() int64 {
 	return u.id
 }
 
-func (u *User) getName() string {
+func (u *User) GetName() string {
 	return u.name
 }
 
