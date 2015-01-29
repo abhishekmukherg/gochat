@@ -2,7 +2,7 @@ package gchatmain
 
 import (
 	"fmt"
-	"github.com/linkinpark342/gchat/src/users"
+	"github.com/linkinpark342/gchat/users"
 )
 
 func Main() {
