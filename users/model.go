@@ -5,18 +5,10 @@ import (
 )
 
 type User struct {
-	id int64
-	name string
-}
-
-func (u *User) GetId() int64 {
-	return u.id
-}
-
-func (u *User) GetName() string {
-	return u.name
+	Id int64
+	Name string
 }
 
 func (u *User) String() string {
-	return fmt.Sprintf("User{%v, %v}", u.id, u.name)
+	return fmt.Sprintf("User{%v, %v}", u.Id, u.Name)
 }

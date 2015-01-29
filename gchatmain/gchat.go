@@ -1,10 +1,11 @@
 package gchatmain
 
 import (
-	"fmt"
-	"github.com/linkinpark342/gchat/users"
 	"github.com/linkinpark342/gchat/gchatdb"
+	"github.com/linkinpark342/gchat/users"
+	"github.com/linkinpark342/gchat/router"
 	_ "github.com/mattn/go-sqlite3"
+	"net/http"
 	"log"
 )
 
@@ -21,11 +22,8 @@ func Main() {
 	}
 
 	userMgr := users.NewManager(db)
-	user, err := userMgr.Create("magic")
-	if err != nil {
-		log.Fatalln("Failed to do magic")
-	}
-	fmt.Printf("Magic %v %q\n", user, err)
-	user, err = userMgr.GetById(user.GetId())
-	fmt.Printf("Magic %v %q\n", user, err)
+
+	handler := router.Create(userMgr)
+	http.Handle("/", handler)
+	http.ListenAndServe(":8080", nil)
 }

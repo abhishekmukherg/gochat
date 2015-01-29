@@ -28,7 +28,7 @@ func (u *UserManager) GetById(id int64) (*User, error) {
 		log.Fatal(err)
 		return nil, err
 	default:
-		return &User{id: id, name: name}, nil
+		return &User{Id: id, Name: name}, nil
 	}
 }
 
@@ -43,5 +43,5 @@ func (u *UserManager) Create(name string) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &User{id: id, name: name}, nil
+	return &User{Id: id, Name: name}, nil
 }
