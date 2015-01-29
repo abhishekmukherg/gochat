@@ -23,7 +23,7 @@ func (u *UserManager) GetById(id int64) (*User, error) {
 	switch {
 	case err == sql.ErrNoRows:
 		log.Printf("No user with that ID")
-		return nil, err
+		return nil, nil
 	case err != nil:
 		log.Fatal(err)
 		return nil, err
