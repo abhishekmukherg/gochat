@@ -11,10 +11,10 @@ import (
 )
 
 type GchatRouter struct {
-	user *users.UserManager
+	user users.UserManager
 }
 
-func Create(userMgr *users.UserManager) http.Handler {
+func Create(userMgr users.UserManager) http.Handler {
 	r := mux.NewRouter()
 	gcr := GchatRouter{userMgr}
 	s := r.PathPrefix("/users").Subrouter()
@@ -114,8 +114,8 @@ func (gc *GchatRouter) authenticate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := gc.user.Authenticate(u.Name, []byte(u.Password))
-	if user == nil {
+	user, err := gc.user.Authenticate(u.Name, []byte(u.Password))
+	if user == nil || err != nil {
 		log.Printf("Failed to create user: %q\n", err)
 		http.Error(w, http.StatusText(500), 500)
 		return

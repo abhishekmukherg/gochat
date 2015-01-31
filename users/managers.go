@@ -17,27 +17,66 @@ var (
 	ErrMissingField = errors.New("Required field not specified")
 )
 
-type UserManager struct {
-	db  *gchatdb.DbConnection
+type UserModelManager interface {
+	// Returns a User object from an ID
+	GetById(id int64) (*User, error)
+
+	// Returns a User object for a Username
+	GetByUsername(username string) (*User, error)
+
+	// Creates a new user and stores in the DB
+	Create(name string, password []byte) (*User, error)
+
+	// Returns a user iff the name and password match
+	Authenticate(name string, password []byte) (*User, error)
+}
+
+// Manages creating and authenticating of tokens, which may be used
+// to act as a user's credentials
+type TokenManager interface {
+	// Returns an auth token for a user
+	GetAuthToken(user *User) string
+
+	// Returns a user for an auth token
+	AuthenticateToken(token string) (user *User)
+}
+
+type UserManager interface {
+	TokenManager
+	UserModelManager
+}
+
+type userModelManager struct {
+	db *gchatdb.DbConnection
+}
+
+type tokenManager struct {
 	scs *goscs.ScsMgr
 }
 
-func NewManager(db *gchatdb.DbConnection, scs *goscs.ScsMgr) *UserManager {
-	mgr := UserManager{db, scs}
+type userManager struct {
+	userModelManager
+	tokenManager
+}
+
+func NewManager(db *gchatdb.DbConnection, scs *goscs.ScsMgr) UserManager {
+	umm := userModelManager{db}
+	tm := tokenManager{scs}
+	mgr := userManager{umm, tm}
 	return &mgr
 }
 
-func (u *UserManager) GetById(id int64) (*User, error) {
+func (u *userModelManager) GetById(id int64) (*User, error) {
 	sqlStmt := "SELECT id, name, password FROM users WHERE id = ?"
 	return u.getByQuery(sqlStmt, id)
 }
 
-func (u *UserManager) GetByUsername(username string) (*User, error) {
+func (u *userModelManager) GetByUsername(username string) (*User, error) {
 	sqlStmt := "SELECT id, name, password FROM users WHERE name = ?"
 	return u.getByQuery(sqlStmt, username)
 }
 
-func (u *UserManager) getByQuery(sqlStmt string, args ...interface{}) (*User, error) {
+func (u *userModelManager) getByQuery(sqlStmt string, args ...interface{}) (*User, error) {
 	db := u.db
 	var id int64
 	var name string
@@ -59,7 +98,7 @@ func passwordStrongEnough(password []byte) bool {
 	return len(password) >= 8
 }
 
-func (u *UserManager) Create(name string, password []byte) (*User, error) {
+func (u *userModelManager) Create(name string, password []byte) (*User, error) {
 	if len(name) == 0 || !passwordStrongEnough(password) {
 		return nil, ErrMissingField
 	}
