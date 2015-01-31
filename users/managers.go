@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/linkinpark342/gchat/gchatdb"
+	"github.com/linkinpark342/goscs"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 )
@@ -17,11 +18,12 @@ var (
 )
 
 type UserManager struct {
-	db *gchatdb.DbConnection
+	db  *gchatdb.DbConnection
+	scs *goscs.ScsMgr
 }
 
-func NewManager(db *gchatdb.DbConnection) *UserManager {
-	mgr := UserManager{db}
+func NewManager(db *gchatdb.DbConnection, scs *goscs.ScsMgr) *UserManager {
+	mgr := UserManager{db, scs}
 	return &mgr
 }
 
