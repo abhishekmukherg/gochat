@@ -21,7 +21,7 @@ func (u *userModelManager) Authenticate(username string, password []byte) (*User
 	return user, nil
 }
 
-func (u *tokenManager) AuthenticateToken(token string) (user *User) {
+func (u *userManager) AuthenticateToken(token string) (user *User) {
 	data, err := u.scs.Parse(token)
 	if err != nil {
 		return nil
@@ -31,17 +31,21 @@ func (u *tokenManager) AuthenticateToken(token string) (user *User) {
 	if err != nil {
 		log.Fatal("Could not unmarshal a valid cookie:", data)
 	}
-	user = new(User)
-	user.Id = *cookie.Id
+	user, err = u.GetById(*cookie.Id)
+	if err != nil {
+		return nil
+	}
+	if user.passwordVersion != *cookie.AuthVersion {
+		return nil
+	}
 	return user
 }
 
 // Returns a cookie that can validate the user in the future
 func (u *tokenManager) GetAuthToken(user *User) string {
-	var authVersion int64 = 1
 	cookie := proto.Cookie{
 		Id:          &user.Id,
-		AuthVersion: &authVersion,
+		AuthVersion: &user.passwordVersion,
 	}
 	data, err := protobuf.Marshal(&cookie)
 	if err != nil {

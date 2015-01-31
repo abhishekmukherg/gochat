@@ -22,7 +22,7 @@ var _ = math.Inf
 
 type Cookie struct {
 	Id               *int64 `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
-	AuthVersion      *int64 `protobuf:"varint,2,req,name=auth_version" json:"auth_version,omitempty"`
+	AuthVersion      *int32 `protobuf:"varint,2,req,name=auth_version" json:"auth_version,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
@@ -37,7 +37,7 @@ func (m *Cookie) GetId() int64 {
 	return 0
 }
 
-func (m *Cookie) GetAuthVersion() int64 {
+func (m *Cookie) GetAuthVersion() int32 {
 	if m != nil && m.AuthVersion != nil {
 		return *m.AuthVersion
 	}

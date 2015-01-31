@@ -5,9 +5,10 @@ import (
 )
 
 type User struct {
-	Id             int64
-	Name           string
-	hashedPassword []byte
+	Id              int64
+	Name            string
+	hashedPassword  []byte
+	passwordVersion int32
 }
 
 func (u *User) String() string {

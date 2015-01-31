@@ -67,12 +67,12 @@ func NewManager(db *gchatdb.DbConnection, scs *goscs.ScsMgr) UserManager {
 }
 
 func (u *userModelManager) GetById(id int64) (*User, error) {
-	sqlStmt := "SELECT id, name, password FROM users WHERE id = ?"
+	sqlStmt := "SELECT id, name, password, passwordVersion FROM users WHERE id = ?"
 	return u.getByQuery(sqlStmt, id)
 }
 
 func (u *userModelManager) GetByUsername(username string) (*User, error) {
-	sqlStmt := "SELECT id, name, password FROM users WHERE name = ?"
+	sqlStmt := "SELECT id, name, password, passwordVersion FROM users WHERE name = ?"
 	return u.getByQuery(sqlStmt, username)
 }
 
@@ -81,7 +81,8 @@ func (u *userModelManager) getByQuery(sqlStmt string, args ...interface{}) (*Use
 	var id int64
 	var name string
 	var password []byte
-	err := db.QueryRow(sqlStmt, args...).Scan(&id, &name, &password)
+	var passwordVersion int32
+	err := db.QueryRow(sqlStmt, args...).Scan(&id, &name, &password, &passwordVersion)
 	switch {
 	case err == sql.ErrNoRows:
 		log.Printf("No user with that ID")
@@ -90,7 +91,11 @@ func (u *userModelManager) getByQuery(sqlStmt string, args ...interface{}) (*Use
 		log.Fatal(err)
 		return nil, err
 	default:
-		return &User{Id: id, Name: name, hashedPassword: password}, nil
+		return &User{
+			Id:              id,
+			Name:            name,
+			hashedPassword:  password,
+			passwordVersion: passwordVersion}, nil
 	}
 }
 
@@ -108,7 +113,7 @@ func (u *userModelManager) Create(name string, password []byte) (*User, error) {
 		log.Fatalf("Failed to bcrypt password! %q", err)
 		return nil, err
 	}
-	sqlStmt := "INSERT INTO users(name, password) VALUES (?, ?)"
+	sqlStmt := "INSERT INTO users(name, password, passwordVersion) VALUES (?, ?, 1)"
 	result, err := db.Exec(sqlStmt, name, hashedPassword)
 	if err != nil {
 		return nil, err
