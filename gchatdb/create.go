@@ -57,7 +57,9 @@ func (db *DbConnection) Upgrade() error {
 func (db *DbConnection) doUpgrade(version int) error {
 	sqlStmts := []string{
 		"create table versions (cur_version integer)",
-		"create table users (id integer not null primary key, name text unique not null)",
+		`create table users (id integer not null primary key,
+					name text unique not null,
+					password blob)`,
 	}
 
 	for _, sqlStmt := range sqlStmts {
@@ -81,4 +83,3 @@ func (db *DbConnection) updateVersion(version int) error {
 	}
 	return nil
 }
-

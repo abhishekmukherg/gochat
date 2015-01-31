@@ -1,12 +1,12 @@
 package router
 
 import (
-	"github.com/linkinpark342/gchat/users"
-	"github.com/gorilla/mux"
-	"io/ioutil"
-	"net/http"
 	"encoding/json"
+	"github.com/gorilla/mux"
+	"github.com/linkinpark342/gchat/users"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"strconv"
 )
 
@@ -24,8 +24,13 @@ func Create(userMgr *users.UserManager) http.Handler {
 	return r
 }
 
+type userForm struct {
+	users.User
+	Password string
+}
+
 func (gc *GchatRouter) userAddHandler(w http.ResponseWriter, r *http.Request) {
-	var u users.User
+	var u userForm
 	buf, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
@@ -38,7 +43,7 @@ func (gc *GchatRouter) userAddHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newUser, err := gc.user.Create(u.Name)
+	newUser, err := gc.user.Create(u.Name, []byte(u.Password))
 	if err != nil {
 		log.Printf("Failed to create user: %q\n", err)
 		http.Error(w, http.StatusText(500), 500)

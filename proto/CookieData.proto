@@ -1,0 +1,6 @@
+package proto;
+
+message Cookie {
+    required int64 id = 1;
+    required int64 auth_version = 2;
+}
