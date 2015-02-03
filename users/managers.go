@@ -38,7 +38,7 @@ type TokenManager interface {
 	GetAuthToken(user *User) string
 
 	// Returns a user for an auth token
-	AuthenticateToken(token string) (user *User)
+	AuthenticateToken(token string) (user *LiteUser)
 }
 
 type UserManager interface {
@@ -92,7 +92,7 @@ func (u *userModelManager) getByQuery(sqlStmt string, args ...interface{}) (*Use
 		return nil, err
 	default:
 		return &User{
-			Id:              id,
+			LiteUser:        LiteUser{Id: id},
 			Name:            name,
 			hashedPassword:  password,
 			passwordVersion: passwordVersion}, nil
@@ -122,5 +122,5 @@ func (u *userModelManager) Create(name string, password []byte) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &User{Id: id, Name: name}, nil
+	return &User{LiteUser: LiteUser{Id: id}, Name: name, hashedPassword: hashedPassword, passwordVersion: 1}, nil
 }

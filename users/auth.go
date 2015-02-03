@@ -21,7 +21,7 @@ func (u *userModelManager) Authenticate(username string, password []byte) (*User
 	return user, nil
 }
 
-func (u *userManager) AuthenticateToken(token string) (user *User) {
+func (u *userManager) AuthenticateToken(token string) (user *LiteUser) {
 	data, err := u.scs.Parse(token)
 	if err != nil {
 		return nil
@@ -31,14 +31,7 @@ func (u *userManager) AuthenticateToken(token string) (user *User) {
 	if err != nil {
 		log.Fatal("Could not unmarshal a valid cookie:", data)
 	}
-	user, err = u.GetById(*cookie.Id)
-	if err != nil {
-		return nil
-	}
-	if user.passwordVersion != *cookie.AuthVersion {
-		return nil
-	}
-	return user
+	return &LiteUser{Id: *cookie.Id}
 }
 
 // Returns a cookie that can validate the user in the future
