@@ -54,5 +54,5 @@ func (s *MySuite) TestAddParticipant(c *C) {
 	chat, err = s.cm.Subscribe(chat, *user)
 	c.Check(err, IsNil)
 	c.Check(chat.Participants, HasLen, 1)
-	c.Check(chat.Participants, DeepEquals, []users.User{*user})
+	c.Check(chat.Participants, DeepEquals, []users.LiteUser{*user})
 }
