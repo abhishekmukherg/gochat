@@ -4,12 +4,20 @@ import (
 	"fmt"
 )
 
-type LiteUser struct {
-	Id int64
+type LiteUser interface {
+	Id() int64
+}
+
+type liteUser struct {
+	id int64
+}
+
+func (l liteUser) Id() int64 {
+	return l.id
 }
 
 type User struct {
-	LiteUser
+	liteUser
 	Name            string
 	hashedPassword  []byte
 	passwordVersion int32

@@ -2,7 +2,6 @@ package users
 
 import (
 	"database/sql"
-	"errors"
 	"github.com/linkinpark342/gchat/gchatdb"
 	"github.com/linkinpark342/goscs"
 	"golang.org/x/crypto/bcrypt"
@@ -11,10 +10,6 @@ import (
 
 const (
 	BCRYPT_COST = 10
-)
-
-var (
-	ErrMissingField = errors.New("Required field not specified")
 )
 
 type UserModelManager interface {
@@ -38,7 +33,7 @@ type TokenManager interface {
 	GetAuthToken(user *User) string
 
 	// Returns a user for an auth token
-	AuthenticateToken(token string) (user *LiteUser)
+	AuthenticateToken(token string) (user LiteUser)
 }
 
 type UserManager interface {
@@ -47,7 +42,7 @@ type UserManager interface {
 }
 
 type userModelManager struct {
-	db *gchatdb.DbConnection
+	db gchatdb.DbConnection
 }
 
 type tokenManager struct {
@@ -59,7 +54,7 @@ type userManager struct {
 	tokenManager
 }
 
-func NewManager(db *gchatdb.DbConnection, scs *goscs.ScsMgr) UserManager {
+func NewManager(db gchatdb.DbConnection, scs *goscs.ScsMgr) UserManager {
 	umm := userModelManager{db}
 	tm := tokenManager{scs}
 	mgr := userManager{umm, tm}
@@ -92,7 +87,7 @@ func (u *userModelManager) getByQuery(sqlStmt string, args ...interface{}) (*Use
 		return nil, err
 	default:
 		return &User{
-			LiteUser:        LiteUser{Id: id},
+			liteUser:        liteUser{id: id},
 			Name:            name,
 			hashedPassword:  password,
 			passwordVersion: passwordVersion}, nil
@@ -103,9 +98,9 @@ func passwordStrongEnough(password []byte) bool {
 	return len(password) >= 8
 }
 
-func (u *userModelManager) Create(name string, password []byte) (*User, error) {
+func (u userModelManager) Create(name string, password []byte) (*User, error) {
 	if len(name) == 0 || !passwordStrongEnough(password) {
-		return nil, ErrMissingField
+		return nil, gchatdb.ErrMissingField
 	}
 	db := u.db
 	hashedPassword, err := bcrypt.GenerateFromPassword(password, BCRYPT_COST)
@@ -122,5 +117,5 @@ func (u *userModelManager) Create(name string, password []byte) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &User{LiteUser: LiteUser{Id: id}, Name: name, hashedPassword: hashedPassword, passwordVersion: 1}, nil
+	return &User{liteUser: liteUser{id: id}, Name: name, hashedPassword: hashedPassword, passwordVersion: 1}, nil
 }

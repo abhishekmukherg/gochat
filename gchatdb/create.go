@@ -5,15 +5,37 @@ import (
 	"log"
 )
 
-const latestVersion = 1
+var (
+	dbQueries = []string{
+		"CREATE TABLE versions (cur_version INTEGER)",
+		`CREATE TABLE users (id INTEGER NOT NULL PRIMARY KEY,
+					name TEXT UNIQUE NOT NULL,
+					password BLOB,
+				        passwordVersion INTEGER)`,
+		`CREATE TABLE chats (id INTEGER NOT NULL PRIMARY KEY,
+					title TEXT UNIQUE NOT NULL)`,
+		`CREATE TABLE chat_users (chat_id INTEGER NOT NULL,
+				          user_id INTEGER NOT NULL)`,
+		`CREATE UNIQUE INDEX chat_users_idx ON chat_users (chat_id, user_id)`,
+
+		`CREATE TABLE messages (id INTEGER NOT NULL PRIMARY KEY,
+					user_id INTEGER NOT NULL,
+				        chat_id INTEGER NOT NULL,
+				        timestamp INTEGER NOT NULL,
+				        text TEXT)`,
+		"CREATE INDEX messages_chat_idx ON messages (chat_id, timestamp)",
+	}
+
+	latestVersion = len(dbQueries)
+)
 
 type DbConnection struct {
 	*sql.DB
 }
 
-func Open(driverName, dataSourceName string) (*DbConnection, error) {
+func Open(driverName, dataSourceName string) (DbConnection, error) {
 	db, err := sql.Open(driverName, dataSourceName)
-	return &DbConnection{db}, err
+	return DbConnection{db}, err
 }
 
 func (db *DbConnection) getVersion() (int, error) {
@@ -55,22 +77,16 @@ func (db *DbConnection) Upgrade() error {
 }
 
 func (db *DbConnection) doUpgrade(version int) error {
-	sqlStmts := []string{
-		"create table versions (cur_version integer)",
-		`create table users (id integer not null primary key,
-					name text unique not null,
-					password blob,
-				        passwordVersion integer)`,
-	}
-
-	for _, sqlStmt := range sqlStmts {
-		_, err := db.Exec(sqlStmt)
+	tx, err := db.Begin()
+	for _, sqlStmt := range dbQueries[version:] {
+		_, err := tx.Exec(sqlStmt)
+		log.Print(sqlStmt)
 		if err != nil {
 			return err
 		}
 	}
-
-	return nil
+	err = tx.Commit()
+	return err
 }
 
 func (db *DbConnection) updateVersion(version int) error {
