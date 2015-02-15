@@ -1,0 +1,34 @@
+{
+	"ImportPath": "github.com/linkinpark342/gchat",
+	"GoVersion": "go1.4.1",
+	"Deps": [
+		{
+			"ImportPath": "github.com/golang/protobuf/proto",
+			"Rev": "a11b6342f0e28eab4059c0cabbad38cef38b9b6e"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "215affda49addc4c8ef7e2534915df2c8c35c6cd"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "e444e69cbd2e2e3e0749a2f3c717cec491552bbf"
+		},
+		{
+			"ImportPath": "github.com/linkinpark342/goscs",
+			"Rev": "00a05c6270967eff578619278a0e11b52d7e997f"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-sqlite3",
+			"Rev": "25d045f12a64283630fdedec899655cc5710b683"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/bcrypt",
+			"Rev": "bfc286917c5fcb7420d7e3092b50bbfd31b38a98"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/blowfish",
+			"Rev": "bfc286917c5fcb7420d7e3092b50bbfd31b38a98"
+		}
+	]
+}
