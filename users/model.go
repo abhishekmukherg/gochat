@@ -16,6 +16,10 @@ func (l liteUser) Id() int64 {
 	return l.id
 }
 
+func NewLiteUser(id int64) LiteUser {
+	return liteUser{id}
+}
+
 type User struct {
 	liteUser
 	Name            string

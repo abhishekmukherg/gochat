@@ -31,6 +31,31 @@ func (c *ChatMgr) NewChat(title string) (*Chat, error) {
 	return &Chat{Id: id, Title: title}, nil
 }
 
+func (c *ChatMgr) GetChat(title string) (*Chat, error) {
+	sqlStmt := "SELECT id FROM chats WHERE title = ?"
+	var id int64
+	err := c.db.QueryRow(sqlStmt, title).Scan(&id)
+	if err != nil {
+		return nil, err
+	}
+	sqlStmt = "SELECT user_id FROM chat_users WHERE chat_id = ?"
+	rows, err := c.db.Query(sqlStmt, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	users := make([]users.LiteUser, 0)
+	for rows.Next() {
+		var user_id int64
+		err = rows.Scan(&id)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, users.NewLiteUser(user_id))
+	}
+	return &Chat{Id: id, Title: title, Participants: users}, nil
+}
+
 func (cm *ChatMgr) Subscribe(c *Chat, users ...users.LiteUser) (*Chat, error) {
 	tx, err := cm.db.Begin()
 	if err != nil {
