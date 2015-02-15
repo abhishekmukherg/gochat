@@ -3,8 +3,8 @@ package messages
 import (
 	"testing"
 
-	"github.com/linkinpark342/gchat/gchatdb"
-	"github.com/linkinpark342/gchat/users"
+	"github.com/linkinpark342/gochat/gchatdb"
+	"github.com/linkinpark342/gochat/users"
 	"github.com/linkinpark342/goscs"
 	_ "github.com/mattn/go-sqlite3"
 	. "gopkg.in/check.v1"

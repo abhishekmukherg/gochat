@@ -1,9 +1,9 @@
 package gchatmain
 
 import (
-	"github.com/linkinpark342/gchat/gchatdb"
-	"github.com/linkinpark342/gchat/router"
-	"github.com/linkinpark342/gchat/users"
+	"github.com/linkinpark342/gochat/gchatdb"
+	"github.com/linkinpark342/gochat/router"
+	"github.com/linkinpark342/gochat/users"
 	"github.com/linkinpark342/goscs"
 	_ "github.com/mattn/go-sqlite3"
 	"log"

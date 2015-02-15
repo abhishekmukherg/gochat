@@ -2,7 +2,7 @@ package users
 
 import (
 	protobuf "github.com/golang/protobuf/proto"
-	"github.com/linkinpark342/gchat/proto"
+	"github.com/linkinpark342/gochat/proto"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 )

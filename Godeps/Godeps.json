@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/linkinpark342/gchat",
+	"ImportPath": "github.com/linkinpark342/gochat",
 	"GoVersion": "go1.4.1",
 	"Deps": [
 		{

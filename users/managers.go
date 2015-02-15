@@ -2,7 +2,7 @@ package users
 
 import (
 	"database/sql"
-	"github.com/linkinpark342/gchat/gchatdb"
+	"github.com/linkinpark342/gochat/gchatdb"
 	"github.com/linkinpark342/goscs"
 	"golang.org/x/crypto/bcrypt"
 	"log"

@@ -3,7 +3,7 @@ package router
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/linkinpark342/gchat/users"
+	"github.com/linkinpark342/gochat/users"
 	"io/ioutil"
 	"log"
 	"net/http"

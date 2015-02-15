@@ -2,7 +2,7 @@ package messages
 
 import (
 	"fmt"
-	"github.com/linkinpark342/gchat/users"
+	"github.com/linkinpark342/gochat/users"
 	"time"
 )
 

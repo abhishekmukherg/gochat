@@ -3,8 +3,8 @@ package messages
 import (
 	"time"
 
-	"github.com/linkinpark342/gchat/gchatdb"
-	"github.com/linkinpark342/gchat/users"
+	"github.com/linkinpark342/gochat/gchatdb"
+	"github.com/linkinpark342/gochat/users"
 )
 
 type ChatMgr struct {

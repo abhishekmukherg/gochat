@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/linkinpark342/gchat/gchatmain"
+	"github.com/linkinpark342/gochat/gchatmain"
 )
 
 func main() {
