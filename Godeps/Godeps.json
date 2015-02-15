@@ -1,6 +1,9 @@
 {
 	"ImportPath": "github.com/linkinpark342/gochat",
 	"GoVersion": "go1.4.1",
+	"Packages": [
+		"./..."
+	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/golang/protobuf/proto",
@@ -29,6 +32,14 @@
 		{
 			"ImportPath": "golang.org/x/crypto/blowfish",
 			"Rev": "bfc286917c5fcb7420d7e3092b50bbfd31b38a98"
+		},
+		{
+			"ImportPath": "golang.org/x/net/websocket",
+			"Rev": "9dd48c277bcb2bb2cc3eb6a6368a486a567d3562"
+		},
+		{
+			"ImportPath": "gopkg.in/check.v1",
+			"Rev": "64131543e7896d5bcc6bd5a76287eb75ea96c673"
 		}
 	]
 }
