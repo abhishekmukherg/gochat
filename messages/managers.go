@@ -44,16 +44,16 @@ func (c *ChatMgr) GetChat(title string) (*Chat, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	users := make([]users.LiteUser, 0)
+	participants := make([]users.LiteUser, 0)
 	for rows.Next() {
 		var user_id int64
 		err = rows.Scan(&id)
 		if err != nil {
 			return nil, err
 		}
-		users = append(users, users.NewLiteUser(user_id))
+		participants = append(participants, users.NewLiteUser(user_id))
 	}
-	return &Chat{Id: id, Title: title, Participants: users}, nil
+	return &Chat{Id: id, Title: title, Participants: participants}, nil
 }
 
 func (cm *ChatMgr) Subscribe(c *Chat, users ...users.LiteUser) (*Chat, error) {
